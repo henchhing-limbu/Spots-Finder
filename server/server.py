@@ -11,7 +11,8 @@ while True:
     client_connection, client_address = listen_socket.accept()
     request = client_connection.recv(1024)
     print request
-
+    # TODO: check for the validity of the request
+    # TODO: need to convert the user address into coordinate (latitude, longitude)
     # TODO: make function to retrieve data from bigquery
     response = """\
 HTTP/1.1 200 OK
