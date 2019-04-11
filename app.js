@@ -7,7 +7,7 @@ const app = express();
 app.get('/', (req, res) => {
     res
         .status(200)
-        .sendFile('html/request.html', {root: __dirname})
+        .send('hello world!')
         .end();
 });
 
