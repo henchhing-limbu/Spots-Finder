@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "a web application to let users find nearest parking spot",
   "main": "app.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gcloud app deploy"
   },
   "dependencies": {
     "express": "^4.16.3"
