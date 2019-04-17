@@ -10,18 +10,21 @@ app.get('/', (req, res) => {
         .status(200)
         .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
 });
-app.get('/request.html', (req, res) => {
-    res
-        .status(20)
-        .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
-})
-app.get('/response.html', (req, res) => {
-    // TODO: need to query the database 
-    // Need to get parking spots
+
+// handles get request from the client
+app.get('/getspot', (req, res) => {
+    
+    //TODO: 
+    // send a json file with availbale parking spots
+    var parking_spots = {
+        "fname": ["henchhing", "aayush", "kaleshwar", "zaykha", "biswash"],
+        "lname": ["limbu", "gupta", "singh", "kyaw san", "adhikari"]
+    }
+    var json_data = JSON.stringify(parking_spots);
     res
         .status(200)
-        .sendFile(path.join(__dirname, 'public', 'html', 'response.html'));
-})
+        .json(json_data);
+});
 
 // Start the server
 const PORT = 8080;
