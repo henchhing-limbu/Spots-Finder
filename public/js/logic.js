@@ -1,39 +1,42 @@
+// global variables
+const num_table_entries = 5;
+// TODO: needs to be updated
+const col_names = ["fname", "lname"];
+
 function findParkingSpot() {
     var usr_input = document.getElementById("usr-addr").value;
     if (usr_input == "") {
         swal("Error!", "There is no input address", 'error');
     }
     else {
-        // TODO: GET THE input
-        // TODO: cloud function to make query to the databse
-
-        /*
+        // creat new http request
         var newXHR = new XMLHttpRequest();
-        newXHR.addEventListener("load",reqListener);
-        newXHR.open("POST","/import");
-        newXHR.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    
-        //Data for POST
-        var JSONObj = {};
-        JSONObj.address = usr_input;
-        console.log(JSONObj);
-        //Format Data for POST
-        var POSTData = JSON.stringify(JSONObj);
-        newXHR.send(POSTData);
-        */
+        newXHR.onreadystatechange = function(req) {
+            if (this.readyState == 4 && this.status == 200) {
+                // TODO:
+                // res must be checked if the address was indeed valid address
+                var res = JSON.parse(req.target.response);
+                res = JSON.parse(res);
+                update_table(res);
+            }
+        };
+        // send a get request to server with the address attached
+        newXHR.open("GET", "getspot?addr=" + usr_input, true);
+        newXHR.send();
     }
 }
 
-function reqListener(req) {
-    var res = JSON.parse(req.target.response);
-    console.log(res);
-    if (res.status=="OK") {
-        swal("Success!", "Succesfully Sent & Retrieved Data :\n", 'success');
+// updates the html page with a table that has nearest parking spots available
+function update_table(res) {
+    document.getElementById("title").innerText = "Available Parking Spot";
+    var table_data = "";
+    for (var i = 0; i < num_table_entries; i++) {
+        table_data += "<tr>";
+        for (var col_name in res) {
+            // swal("Success!", res[col_name][0], "success");
+            table_data += "<td>" + res[col_name][i] + "</td>";
+        }
+        table_data += "</tr>";
     }
-    else if (res.status=="ERROR") {
-        swal("Error!", "The server received unexpected data or is missing important parameters", "error");
-    }
-    else {
-        swal("Error!", "Unexcpected Error!", "error");
-    }
+    document.getElementById("parking-spots").innerHTML = table_data;
 }
