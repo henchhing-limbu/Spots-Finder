@@ -38,10 +38,18 @@ exports.findNearestParkingSpot = function (userLocation, config) {
     });
 
     return getParkingSpots(knex).then(parkingSpots => {
-        var a = geolib.findNearest(user_location.getLocationDictionary(), parkingSpots.map(spot => spot.getLocationDictionary()), 5);
-        console.log(parkingSpots[a.key]);
-        return parkingSpots[a.key];
+        var parkingLotsOrderedByDistance = geolib.orderByDistance(user_location.getLocationDictionary(), parkingSpots.map(spot => spot.getLocationDictionary())).slice(0, 10);
+        console.log(parkingLotsOrderedByDistance);
+        return parkingLotsOrderedByDistance.map(a => parkingSpots[a.key]);
+        // return parkingLotsOrderedByDistance.map(parkingLot => getParkingLotInformationForFrontend(parkingSpots, parkingLot));
     });
+}
+
+function getParkingLotInformationForFrontend(parkingSpots, parkingLot) {
+    return {
+        distance: parkingLot.distance,
+        parkingInfo: parkingSpots[parkingLot.key]
+    };
 }
 
 function getParkingSpots(knex) {

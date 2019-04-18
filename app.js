@@ -22,13 +22,13 @@ app.get('/', (req, res) => {
     res.redirect('/request.html');
 });
 
-app.get('/requet/:lat/:lng', (req, res) => {
+app.get('/getspot/:lat/:lng', (req, res) => {
     const userLocation = {
         latitude: req.params.lat,
         longitude: req.params.lng
     };
     compute.findNearestParkingSpot(userLocation, config).then(result => {
-        res.status(200).send(result);
+        res.json(JSON.stringify(result));
     });
 
 })
