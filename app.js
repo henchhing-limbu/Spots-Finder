@@ -1,15 +1,51 @@
 'use strict';
-
 const express = require('express');
+const path = require('path');
+const compute = require('./compute.js');
 
 const app = express();
+app.enable('trust proxy');
+app.use(express.static(__dirname + '/public'));
+
+// Authentication for cloud SQL. 
+const config = {
+    user: 'root',
+    password: 'password123',
+    database: 'parkingDatabase'
+}
+
+if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+    config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
 
 app.get('/', (req, res) => {
+    res.redirect('/request.html');
+});
+
+app.get('/requet/:lat/:lng', (req, res) => {
+    const userLocation = {
+        latitude: req.params.lat,
+        longitude: req.params.lng
+    };
+    compute.findNearestParkingSpot(userLocation, config).then(result => {
+        res.status(200).send(result);
+    });
+
+})
+
+app.get('/request.html', (req, res) => {
     res
         .status(200)
-        .send('hello world!')
-        .end();
-});
+        .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
+})
+
+app.get('/response.html', (req, res) => {
+    // TODO: need to query the database 
+    // Need to get parking spots
+    res
+        .status(200)
+        .sendFile(path.join(__dirname, 'public', 'html', 'response.html'));
+})
 
 // Start the server
 const PORT = 8080;
