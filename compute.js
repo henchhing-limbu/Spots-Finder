@@ -42,6 +42,9 @@ exports.findNearestParkingSpot = function (userLocation, config) {
         console.log(parkingLotsOrderedByDistance);
         return parkingLotsOrderedByDistance.map(a => parkingSpots[a.key]);
         // return parkingLotsOrderedByDistance.map(parkingLot => getParkingLotInformationForFrontend(parkingSpots, parkingLot));
+    })
+    .catch(err => {
+      console.log(err);
     });
 }
 
