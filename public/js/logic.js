@@ -6,31 +6,42 @@ const col_names = ["fname", "lname"];
 function findParkingSpot() {
     console.log("Hello world");
     var usr_input = document.getElementById("usr-addr").value;
-    
+
     if (usr_input == "") {
         swal("Error!", "There is no input address", 'error');
     }
     else {
         // Parse user address to latitude and longitude. 
-        var newXHR = new XMLHttpRequest();
-        newXHR.onreadystatechange = function (req) {
-            if (this.readyState == 4 && this.status == 200) {
-                // TODO:
-                // res must be checked if the address was indeed valid address
-                alert("Received status 200 message from server");
-                let a = JSON.parse(req.target.response);
-                // a.foreach(response => new Response(response));
-                console.log(a);
-                // var res = JSON.parse(req.target.response);
-                // res = JSON.parse(res);
-                // update_table(res);
-            }
-        };
-        let lat = 12.1;
-        let lng = 13.2;
-        // send a get request to server with the address attached
-        newXHR.open("GET", "getspot/" + lat + "/" + lng, true);
-        newXHR.send();
+
+        var geocodeXHR = new XMLHttpRequest();
+        geocodeXHR.onreadystatechange = function (req) {
+            console.log("Geocode respnse:\n")
+            console.log(req.target.response);
+            var newXHR = new XMLHttpRequest();
+            newXHR.onreadystatechange = function (req) {
+                if (this.readyState == 4 && this.status == 200) {
+                    // TODO:
+                    // res must be checked if the address was indeed valid address
+                    alert("Received status 200 message from server");
+                    let a = JSON.parse(req.target.response);
+                    // a.foreach(response => new Response(response));
+                    console.log(a);
+                    // var res = JSON.parse(req.target.response);
+                    // res = JSON.parse(res);
+                    // update_table(res);
+                }
+            };
+            // TODO: Get latitude and logitude from the response of MapRequest
+            let lat = 12.1;
+            let lng = 13.2;
+            // send a get request to server with the address attached
+            newXHR.open("GET", "getspot/" + lat + "/" + lng, true);
+            newXHR.send();
+        }
+        geocodeXHR.open("GET", 'https://www.mapquestapi.com' 
+            + '/geocoding/v1/address?key=6brQcu0CvLj7baidA9DquRvg663c91RT&location='
+            + encodeURI(usr_input));
+        geocodeXHR.send();
     }
 }
 
