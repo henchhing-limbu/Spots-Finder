@@ -33,13 +33,13 @@ app.get('/getspot/:lat/:lng', (req, res) => {
     });
     // res.status(200).send('some text');
 
-})
+});
 
 app.get('/request.html', (req, res) => {
     res
         .status(200)
         .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
-})
+});
 
 app.get('/response.html', (req, res) => {
     // TODO: need to query the database 
@@ -47,7 +47,7 @@ app.get('/response.html', (req, res) => {
     res
         .status(200)
         .sendFile(path.join(__dirname, 'public', 'html', 'response.html'));
-})
+});
 
 // Start the server
 const PORT = 8080;
