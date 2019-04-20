@@ -6,8 +6,7 @@ const col_names = ["fname", "lname"];
 function findParkingSpot() {
     console.log("Hello world");
     var usr_input = document.getElementById("usr-addr").value;
-
-
+    
     if (usr_input == "") {
         swal("Error!", "There is no input address", 'error');
     }
@@ -18,6 +17,7 @@ function findParkingSpot() {
             if (this.readyState == 4 && this.status == 200) {
                 // TODO:
                 // res must be checked if the address was indeed valid address
+                alert("Received status 200 message from server");
                 let a = JSON.parse(req.target.response);
                 // a.foreach(response => new Response(response));
                 console.log(a);
