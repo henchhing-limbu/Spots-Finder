@@ -1,6 +1,44 @@
+const navigator = require('navigator');
+const geocoding = require('reverse-geocoding');
+
 // global variables
 const num_table_entries = 10;
 const col_names = ["parkingLot", "parkingSpot"];
+
+/**
+ * Adding function to request user location from within the browser. 
+ */
+
+window.onload = function () {
+    var geoOptions = {
+        timeout: 10 * 1000 // 10 seconds timeout. 
+    }
+
+    var geoSuccess = function (position) {
+        var config = {
+            'latitude': position.coords.latitude,
+            'longitude': position.coords.longitude
+        };
+        geocoding.location(config, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                document.getElementById('usr-addr').value = data.formattedAddress;
+            }
+        })
+    }
+
+    var geoError = function (error) {
+        console.log("Error when requesting user location. Error code:  " + error);
+        // error.code can be:
+        //   0: unknown error
+        //   1: permission denied
+        //   2: position unavailable (error response from location provider)
+        //   3: timed out
+    }
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+}
 
 function findParkingSpot() {
     var usr_input = document.getElementById("usr-addr").value;
@@ -29,7 +67,7 @@ function findParkingSpot() {
             newXHR.open("GET", "getspot/" + Location.latitude + "/" + Location.longitude, true);
             newXHR.send();
         }
-        geocodeXHR.open("GET", 'https://www.mapquestapi.com' 
+        geocodeXHR.open("GET", 'https://www.mapquestapi.com'
             + '/geocoding/v1/address?key=6brQcu0CvLj7baidA9DquRvg663c91RT&location='
             + encodeURI(usr_input));
         geocodeXHR.send();
