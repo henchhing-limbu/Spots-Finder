@@ -8,6 +8,7 @@ function ParkingSpotLocation(location) {
     this.latitude = location.latitude;
     this.longitude = location.longitude;
     this.status = location.status;
+    this.address = location.address;
 
     this.getLocationDictionary = function () {
         return { latitude: this.latitude, longitude: this.longitude };
@@ -56,8 +57,8 @@ function getParkingLotInformationForFrontend(parkingSpots, parkingLot) {
 }
 
 function getParkingSpots(knex) {
-    return knex.select('parkingLot', 'parkingSpot', 'latitude', 'longitude', 'status').
-        from('parkingDataTable2').
+    return knex.select('parkingLot', 'parkingSpot', 'latitude', 'longitude', 'status', 'address').
+        from('parkingDataTable3').
         where({ status: 'Empty' }).
         then((results) => {
             return results.map(location => new ParkingSpotLocation(location));

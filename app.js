@@ -41,14 +41,6 @@ app.get('/request.html', (req, res) => {
         .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
 });
 
-app.get('/response.html', (req, res) => {
-    // TODO: need to query the database 
-    // Need to get parking spots
-    res
-        .status(200)
-        .sendFile(path.join(__dirname, 'public', 'html', 'response.html'));
-});
-
 // Start the server
 const PORT = 8080;
 app.listen(PORT, () => {
