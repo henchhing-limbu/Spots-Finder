@@ -30,6 +30,10 @@ app.get('/getspot/:lat/:lng', (req, res) => {
     };
     compute.findNearestParkingSpot(userLocation, config).then(result => {
         res.status(200).send(JSON.stringify(result));
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(400).send(JSON.stringify(error));
     });
     // res.status(200).send('some text');
 
@@ -39,14 +43,6 @@ app.get('/request.html', (req, res) => {
     res
         .status(200)
         .sendFile(path.join(__dirname, 'public', 'html', 'request.html'));
-});
-
-app.get('/response.html', (req, res) => {
-    // TODO: need to query the database 
-    // Need to get parking spots
-    res
-        .status(200)
-        .sendFile(path.join(__dirname, 'public', 'html', 'response.html'));
 });
 
 // Start the server
