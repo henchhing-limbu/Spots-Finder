@@ -30,6 +30,10 @@ app.get('/getspot/:lat/:lng', (req, res) => {
     };
     compute.findNearestParkingSpot(userLocation, config).then(result => {
         res.status(200).send(JSON.stringify(result));
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(400).send(JSON.stringify(error));
     });
     // res.status(200).send('some text');
 

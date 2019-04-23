@@ -2,6 +2,7 @@
 const num_table_entries = 10;
 const col_names = ["parkingLot", "parkingSpot"];
 let Location = null;
+let count = 0;
 
 window.onload = function() {
     setInterval(getInput, 5000);
@@ -10,6 +11,8 @@ window.onload = function() {
 function getInput() {
     if (Location != null) {
         getParkingSpots(Location);
+        count += 1;
+        console.log("Count " + count)
     }
 }
 
@@ -42,12 +45,15 @@ function getUserLoc() {
         // Parse user address to latitude and longitude. 
         let geocodeXHR = new XMLHttpRequest();
         geocodeXHR.onreadystatechange = function (req) {
-            let response = JSON.parse(req.target.response);
-            let lat_lng = response.results[0].locations[0].latLng;
-            Location = {
-                latitude: lat_lng.lat,
-                longitude: lat_lng.lng
-            };
+            if (this.readyState == 4 && this.status == 200) {
+                let response = JSON.parse(req.target.response);
+                console.log(response);
+                let lat_lng = response.results[0].locations[0].latLng;
+                Location = {
+                    latitude: lat_lng.lat,
+                    longitude: lat_lng.lng
+                };
+            }
         }
         geocodeXHR.open("GET", 'https://www.mapquestapi.com' 
             + '/geocoding/v1/address?key=6brQcu0CvLj7baidA9DquRvg663c91RT&location='
@@ -60,13 +66,19 @@ function getUserLoc() {
 // gets JSON object with avilable parking spots
 function getParkingSpots(Location) {
     console.log("called getParkingSpots");
+    console.log(Location.latitude, Location.longitude);
     let newXHR = new XMLHttpRequest();
     newXHR.onreadystatechange = function (req) {
         if (this.readyState == 4 && this.status == 200) {
             console.log("Got response from server");
+            console.log(req.target.response);
             let res = JSON.parse(req.target.response);
             console.log(res[0]);
             update_table(res);
+        }
+        else
+        {
+            console.log(req);
         }
     };
     // send a get request to server with the address attached
